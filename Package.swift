@@ -10,8 +10,7 @@ let package = Package(
         .library(name: "Tau", targets: ["Tau"]),
     ],
     dependencies: [
-        .package(url: "git@github.com:BinaryBirds/tau-kit", .branch("main")),
-        //.package(url: "https://github.com/vapor/tau-kit", from: "1.0.0"),
+        .package(url: "https://github.com/binarybirds/tau-kit", from: "1.0.0"),
         .package(url: "https://github.com/vapor/vapor", from: "4.41.0"),
     ],
     targets: [

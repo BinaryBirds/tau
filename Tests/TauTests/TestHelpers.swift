@@ -5,19 +5,23 @@ import NIOConcurrencyHelpers
 
 
 class TauTestClass: TauKitTestCase {
+
     var app: Application { _app! }
     var _app: Application? = nil
     
+    var projectFolder: String { "/\(#file.split(separator: "/").dropLast().joined(separator: "/"))/" }
+    var templateFolder: String { projectFolder + "Templates/" }
+
     override func setUp() {
         _app = Application(.testing)
         TemplateEngine.cache.dropAll()
-        TemplateEngine.rootDirectory = projectFolder
+        TemplateEngine.rootDirectory = templateFolder
         TemplateEngine.sources = .init()
     }
     
-    override func tearDown() { app.shutdown() }
+    override func tearDown() {
+        app.shutdown()
+    }
 }
 
 
-var projectFolder: String { "/\(#file.split(separator: "/").dropLast(3).joined(separator: "/"))/" }
-var templateFolder: String { projectFolder + "Views/" }

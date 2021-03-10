@@ -7,7 +7,7 @@ class TauTests: TauTestClass {
     func testApplication() throws {
         app.views.use(.tau)
 
-        app.get("test-file") { $0.view.render("Views/test", ["foo": "bar"]) }
+        app.get("test-file") { $0.view.render("test", ["foo": "bar"]) }
 
         try app.test(.GET, "test-file", afterResponse: {
             XCTAssertEqual($0.status, .ok)
@@ -18,9 +18,9 @@ class TauTests: TauTestClass {
     
     func testSandboxing() throws {
         TemplateEngine.sources = .singleSource(FileSource(fileio: app.fileio,
-                                                        limits: .default,
-                                                        sandboxDirectory: projectFolder,
-                                                        viewDirectory: templateFolder))
+                                                          limits: .default,
+                                                          sandboxDirectory: projectFolder,
+                                                          viewDirectory: templateFolder))
         
         app.views.use(.tau)
 
