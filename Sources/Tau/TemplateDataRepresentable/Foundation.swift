@@ -3,8 +3,8 @@ import Vapor
 
 extension URL {
 
-    var _TemplateData: TemplateData {
-        var values = (try? resourceValues(forKeys: .init(FileTemplateMiddleware.DirectoryIndexing.keys)))?._TemplateData ?? [:]
+    var _templateData: TemplateData {
+        var values = (try? resourceValues(forKeys: .init(FileTemplateMiddleware.DirectoryIndexing.keys)))?._templateData ?? [:]
         values["name"] = lastPathComponent
         values["absolutePath"] = absoluteString
         values["pathComponents"] = pathComponents
@@ -15,7 +15,7 @@ extension URL {
 
 extension URLResourceValues {
 
-    var _TemplateData: [String: TemplateDataRepresentable] {
+    var _templateData: [String: TemplateDataRepresentable] {
         [
             "isApplication": isApplication,
             "isDirectory": isDirectory,

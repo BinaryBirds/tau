@@ -221,7 +221,7 @@ private extension FileTemplateMiddleware {
             ["absolutePath": dir,
              "requestPath": dir.count == self.dir.count ? "/"
                           : String(dir[self.dir.index(before: self.dir.endIndex)..<dir.endIndex]),
-             "files": files.map {$0._TemplateData}  ])
+             "files": files.map {$0._templateData}  ])
         
         try? req.tau.context.register(object: object,
                                        toScope: "index",

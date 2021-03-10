@@ -6,7 +6,7 @@ public struct TemplateEngine {
     
     @RuntimeGuard public static var rootDirectory: String? = nil
     
-    @RuntimeGuard public static var cache: TauKit.Cache = DefaultCache()
+    @RuntimeGuard public static var cache: TauKit.Cache = TemplateCache()
     
     @RuntimeGuard public static var sources: TemplateSources = .init()
     
