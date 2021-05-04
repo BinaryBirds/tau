@@ -63,7 +63,7 @@ public final class FileTemplateMiddleware: Middleware {
     
     private static let lock: Lock = .init()
     private static var lookup: [String: (process: Bool, modTime: Date)] = [:]
-    private static var _contexts: [HTTPMediaType: Renderer.Context] = [:]
+    private static var _contexts: [HTTPMediaType: TemplateRenderer.Context] = [:]
     
     /// Raw directory path is mangled into a source key
     private let dir: String
@@ -72,18 +72,18 @@ public final class FileTemplateMiddleware: Middleware {
 
 public extension FileTemplateMiddleware {
     /// The context associated with `defaultMediaType`
-    static var defaultContext: Renderer.Context? {
+    static var defaultContext: TemplateRenderer.Context? {
         get { self[defaultMediaType] }
         set { self[defaultMediaType] = newValue }
     }
     
     /// All media-type-specific contexts
-    static var contexts: [HTTPMediaType: Renderer.Context] {
+    static var contexts: [HTTPMediaType: TemplateRenderer.Context] {
         get { lock.withLock { _contexts } }
         set { lock.withLockVoid { _contexts = newValue } }
     }
     
-    static subscript(context: HTTPMediaType) -> Renderer.Context? {
+    static subscript(context: HTTPMediaType) -> TemplateRenderer.Context? {
         get { lock.withLock { _contexts[context] ?? .emptyContext() } }
         set { lock.withLockVoid { _contexts[context] = newValue } }
     }
@@ -171,7 +171,7 @@ private extension FileTemplateMiddleware {
         set { Self.lock.withLockVoid { Self.lookup[path] = newValue } }
     }
     
-    subscript(context: HTTPMediaType) -> Renderer.Context? {
+    subscript(context: HTTPMediaType) -> TemplateRenderer.Context? {
         get { Self[context] }
         set { Self[context] = newValue }
     }
@@ -188,7 +188,7 @@ private extension FileTemplateMiddleware {
         relative.removeFirst(dir.count)
         
         let contentType = HTTPMediaType.fileExtension(path.fileExt) ?? Self.defaultMediaType
-        let context: Renderer.Context
+        let context: TemplateRenderer.Context
         do { context = try req.tau.flattenContexts(self[contentType] ?? [:]) }
         catch {
             return req.eventLoop.future(error: moduleError)

@@ -5,7 +5,7 @@ extension TemplateEngine: ViewRenderer {
 
     public func render<E>(_ name: String,
                           _ context: E) -> EventLoopFuture<View> where E: Encodable {
-        guard let context = Renderer.Context(encodable: context) else {
+        guard let context = TemplateRenderer.Context(encodable: context) else {
             return eventLoop.future(error: "Provided context failed to encode or is not a dictionary")
         }
         return render(template: name, context: context)

@@ -28,7 +28,7 @@ public struct TemplateEngine {
         self.app = app
         self.req = req
         self.eventLoop = req?.eventLoop ?? app.eventLoopGroup.next()
-        self.renderer = Renderer(cache: TemplateEngine.cache,
+        self.renderer = TemplateRenderer(cache: TemplateEngine.cache,
                                      sources: TemplateEngine.sources,
                                      eventLoop: eventLoop)
         if req != nil { _ = context }
@@ -37,13 +37,13 @@ public struct TemplateEngine {
     unowned var app: Application
     unowned var req: Request?
     
-    let renderer: Renderer
+    let renderer: TemplateRenderer
 }
 
 // MARK: - Public Properties & Methods
 
 public extension TemplateEngine {
-    var context: Renderer.Context {
+    var context: TemplateRenderer.Context {
         get {
             if let hit = storage?.context { return hit }
             
@@ -61,8 +61,8 @@ public extension TemplateEngine {
     }
     
     func render(template: String,
-                context: Renderer.Context = .emptyContext(),
-                options: Renderer.Options? = nil) -> EventLoopFuture<View> {
+                context: TemplateRenderer.Context = .emptyContext(),
+                options: TemplateRenderer.Options? = nil) -> EventLoopFuture<View> {
         var context = context
         do {
             try context = flattenContexts(context)
@@ -78,8 +78,8 @@ public extension TemplateEngine {
     
     func render(template: String,
                 from source: String,
-                context: Renderer.Context = .emptyContext(),
-                options: Renderer.Options? = nil) -> EventLoopFuture<View> {
+                context: TemplateRenderer.Context = .emptyContext(),
+                options: TemplateRenderer.Options? = nil) -> EventLoopFuture<View> {
         var context = context
         do {
             try context = flattenContexts(context)
@@ -103,7 +103,7 @@ public extension TemplateEngine {
 // MARK: - Internal Properties & Methods
 
 internal extension TemplateEngine {
-    typealias Context = Renderer.Context
+    typealias Context = TemplateRenderer.Context
     typealias ContextStack = [Context]
     
     var storage: Storage? {
@@ -114,14 +114,14 @@ internal extension TemplateEngine {
         }
     }
     
-    func flattenContexts(_ top: Renderer.Context) throws -> Renderer.Context {
+    func flattenContexts(_ top: TemplateRenderer.Context) throws -> TemplateRenderer.Context {
         var stack: ContextStack = []
         app.storage[Key.self].map { stack.append($0.context) }
         req?.storage[Key.self].map { stack.append($0.context) }
         stack.append(top)
         
         guard stack.count > 1 else { return stack[0] }
-        var flat: Renderer.Context = stack[0]
+        var flat: TemplateRenderer.Context = stack[0]
         try stack[1..<stack.count].forEach { try flat.overlay($0) }
         return flat
     }
