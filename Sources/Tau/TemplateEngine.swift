@@ -74,6 +74,7 @@ public extension TemplateEngine {
                                context: context,
                                options: options)
                         .map { View(data: $0) }
+                        .always { _ in storage = nil }
     }
     
     func render(template: String,
@@ -92,6 +93,7 @@ public extension TemplateEngine {
                                context: context,
                                options: options)
                         .map { View(data: $0) }
+                        .always { _ in storage = nil }
     }
     
     static var entities: Entities {
